@@ -6,7 +6,9 @@ Like a river flows surely to the sea
 Darling so it goes some things are meant to be
 Take my hand take my whole life too
 For I can't help falling in love with you"""
-                                                    #Frank Sinatra
+                                                    #Elvis Presley
+                                                    #And I'm a fool
+
 import enum
 import .vcardtypes
 
