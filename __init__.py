@@ -10,7 +10,7 @@ For I can't help falling in love with you"""
 
 import enum
 import random
-import .vcardtypes
+import vcardtypes
 
 #------------ VDeck ------------#
 class VDeck():
@@ -36,15 +36,9 @@ class VDeck():
             properties: a dictionary with custom properties of card"""
             self._name = name
             self._vdeck = vdeck
-            self._status = VCard.Status.Deck
+            self._status = VDeck.VCard.Status.Deck
             self._visible = False
             self._properties = properties
-            self._lists = (
-                    self._hands,
-                    self._table,
-                    self._deck,
-                    self._discards
-                    )
             
         #------------ VDeck.VCard.__dir__ ------------#
         def __dir__(self):
@@ -56,8 +50,8 @@ class VDeck():
             """Let's get properties as attributes.
             As you can read in pydoc first of all it searches in 
             __getattribute__ so..."""
-            if attr in self.properties:
-                return self.properties[attr]
+            if attr in self._properties:
+                return self._properties[attr]
             else:
                 raise AttributeError
             
@@ -76,7 +70,7 @@ class VDeck():
             return self._visible
         @status.setter
         def status(self, status):
-            assert(status, VDeck.VCard.Status)
+            assert isinstance(status, VDeck.VCard.Status)
             self.status = status
         @visible.setter
         def visible(self, visible):
@@ -104,7 +98,7 @@ class VDeck():
         """Initialize the VDeck
         vdeck_type: a VDeck.Type enum
         cards: a dictionary setted by name: properties of each card"""
-        assert isinstance(vdeck_type, vcardtypes.Types)
+        #assert isinstance(vdeck_type, vcardtypes.Types) #¿?
         self._type =vdeck_type
         if vdeck_type == vcardtypes.Types.Custom:
             assert cards is not dict()
@@ -115,6 +109,13 @@ class VDeck():
         self._hands = list()
         self._discards = list()
         self._off_game = list()
+        self._table = list()
+        self._lists = (
+                self._hands,
+                self._table,
+                self._deck,
+                self._discards
+                )
         
     #------------ VDeck @property ------------#
     @property
@@ -138,7 +139,9 @@ class VDeck():
         return self._off_game
         
     #------------ VDeck methods ------------#
-    def _change_status(self, card, new_status, lists=self._lists):
+    def _change_status(self, card, new_status, lists=None):
+        if lists is None:
+            lists = self._lists
         _status = VDeck.VCard.Status #This, children, is an alias
         assert isinstance(card, VDeck.VCard)
         assert isinstance(new_status, _status)
@@ -147,7 +150,7 @@ class VDeck():
                 _status.Hand: self._hands,
                 _status.Discarded: self._discarded,
                 _status.OffGame: self._off_game,
-                _status.Table: self. 
+                _status.Table: self._table
                 }
         for lst in lists:
             if card in lst:
@@ -201,7 +204,7 @@ class VDeck():
         random.shuffle(self._discarded)
         
     def _shuffle_x_on_deck(self, x):
-        """Shuffle whatever on deck""":
+        """Shuffle whatever on deck"""
         lists = (
                 self._discarded,
                 self._hands,
@@ -217,7 +220,10 @@ class VDeck():
             card.set_status(VDeck.VCard.Status.Deck)
         self._deck.extend(x)
         if is_card is True:
-            
+            for lst in lists:
+                if card in lst:
+                    lst.remove(card)
+                    break
         else:
             lists[lists.index(x)] = list() #Varible scopes. ;)
         self.shuffle_deck() #DO NOT REPEAT YOURSELF!
@@ -250,4 +256,4 @@ class Game():
         pass
     class Table():
         #TODO
-        
+        pass

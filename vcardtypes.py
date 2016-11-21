@@ -36,7 +36,7 @@ def selector(vcard_type):
             ]
     def spanish_deck(values):
         deck = dict()
-         for value in values:
+        for value in values:
             for ind_suit, suit in enumerate(spanish_suits):
                 name = str(value)
                 if value == 10:
