@@ -7,7 +7,6 @@ Darling so it goes some things are meant to be
 Take my hand take my whole life too
 For I can't help falling in love with you"""
                                                     #Elvis Presley
-                                                    #And I'm a fool
 
 import enum
 import random
@@ -117,6 +116,27 @@ class VDeck():
         self._discards = list()
         self._off_game = list()
         
+    #------------ VDeck @property ------------#
+    @property
+    def deck(self):
+        return self._deck
+    
+    @property
+    def discards(self):
+        return self._discard
+        
+    @property
+    def cards(self):
+        return self._cards
+        
+    @property
+    def hands(self):
+        return self._hands
+        
+    @property
+    def off_game(self):
+        return self._off_game
+        
     #------------ VDeck methods ------------#
     def _change_status(self, card, new_status, lists=self._lists):
         _status = VDeck.VCard.Status #This, children, is an alias
@@ -201,7 +221,6 @@ class VDeck():
         else:
             lists[lists.index(x)] = list() #Varible scopes. ;)
         self.shuffle_deck() #DO NOT REPEAT YOURSELF!
-            
         
     def shuffle_discarded_on_deck(self):
         """Shuffle the discarded pile on deck"""
